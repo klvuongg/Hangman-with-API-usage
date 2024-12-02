@@ -6,7 +6,7 @@ def fetch_words(api_url):
     try:
         response = requests.get(api_url)
         if response.status_code == 200:
-            return response.json()  # Assuming the API returns a JSON list of words
+            return [word["word"] for word in response.json()]  # Assuming the API returns a JSON list of words
         else:
             print(f"Error fetching words: {response.status_code}")
             return []
@@ -15,9 +15,14 @@ def fetch_words(api_url):
         return []
 
 # Word bank and game setup
-word_bank = ['rizz', 'ohio', 'sigma', 'tiktok', 'skibidi', 'onion', 'python', 'toilet', 'cookies', 'khanh linh']
-api_url = "https://example.com/api/words"  # Replace with the actual API endpoint
+word_bank = []
+api_url = "https://api.datamuse.com/words?ml=word"  
+
 word_bank.extend(fetch_words(api_url))
+if not word_bank:
+    print("No words available from the API. Exiting...")
+    exit()
+
 word = random.choice(word_bank)
 guessedWord = [' ' if char == ' ' else '_' for char in word]
 attempts = 8
